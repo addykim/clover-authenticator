@@ -2,13 +2,13 @@ package project2a.cloverauthenticator;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.pass.Spass;
@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SpassFingerprint mSpassFingerprint;
     private Context mContext;
+    private TextView displayText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,30 +28,30 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        displayText = (TextView) findViewById(R.id.display_text);
+        displayText.setText("Hello world!");
+
 
         mContext = this;
         Spass mSpass = new Spass();
         try {
-            mSpass.initialize(MainActivity.this);
+            mSpass.initialize(mContext);
         } catch (SsdkUnsupportedException e) {
+            Log.d("MAIN", "Exception: " + e.getMessage());
             // Error handling
         } catch (UnsupportedOperationException e){
+            Log.d("MAIN", "Exception: " + e.getMessage());
             // Error handling
         }
         boolean isFeatureEnabled = mSpass.isFeatureEnabled(Spass.DEVICE_FINGERPRINT);
 
         if(isFeatureEnabled){
-            mSpassFingerprint = new SpassFingerprint(MainActivity.this);
+            mSpassFingerprint = new SpassFingerprint(mContext);
+            mSpassFingerprint.setCanceledOnTouchOutside(true);
+            mSpassFingerprint.startIdentifyWithDialog(mContext, listener, true);
+//            boolean mHasRegisteredFinger = mSpassFingerprint.hasRegisteredFinger();
         } else {
-//            Log.d("Main Activity", "Fingerprint Service is not supported in the device.");
+            Log.d("Main Activity", "Fingerprint Service is not supported in the device.");
         }
     }
 
@@ -83,14 +84,19 @@ public class MainActivity extends AppCompatActivity {
                 // It is called when fingerprint identification is finished.
                 if (eventStatus == SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS) {
                     // Identify operation succeeded with fingerprint
-
+                    displayText.setText("Success");
                 } else if (eventStatus == SpassFingerprint.
                         STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS) {
                     // Identify operation succeeded with alternative password
+                    displayText.setText("Success");
+                } else if (eventStatus == SpassFingerprint.STATUS_USER_CANCELLED_BY_TOUCH_OUTSIDE) {
+                    displayText.setText("Touched outside");
+                } else if (eventStatus == SpassFingerprint.STATUS_USER_CANCELLED) {
+                    displayText.setText("User canceled");
                 } else {
+                    displayText.setText("FAILED");
                     // Identify operation failed with given eventStatus.
                     // STATUS_TIMEOUT_FAILED
-                    // STATUS_USER_CANCELLED
                     // STATUS_AUTHENTIFICATION_FAILED
                     // STATUS_QUALITY_FAILED
                 }
@@ -100,12 +106,15 @@ public class MainActivity extends AppCompatActivity {
             public void onReady() {
                 // It is called when fingerprint identification is ready after
                 // startIdentify() is called.
+                Log.d("MAIN", "ON READY");
             }
 
             @Override
             public void onStarted() {
                 // It is called when the user touches the fingerprint sensor after
                 // startIdentify() is called.
+                Log.d("MAIN", "ON STARTED");
+
             }
         };
 }
