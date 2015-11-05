@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('pass-v1.1.4.jar'))
