@@ -24,7 +24,7 @@ import android.util.Log;
 import com.google.android.gms.iid.InstanceID;
 import com.google.android.gms.iid.InstanceIDListenerService;
 
-public class InstanceIDListenerService extends InstanceIDListenerService {
+public class MyInstanceIDListenerService extends InstanceIDListenerService {
 
     private static final String TAG = "MyInstanceIDLS";
 

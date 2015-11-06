@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,6 +23,8 @@ import java.net.URISyntaxException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MAIN";
+
     private SpassFingerprint mSpassFingerprint;
     private Context mContext;
     private TextView displayText;
@@ -33,12 +34,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         displayText = (TextView) findViewById(R.id.display_text);
-        displayText.setText("Hello world!");
-
 
         mContext = this;
         Spass mSpass = new Spass();
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             mSpassFingerprint.startIdentifyWithDialog(mContext, listener, true);
 //            boolean mHasRegisteredFinger = mSpassFingerprint.hasRegisteredFinger();
         } else {
+            displayText.setText(":(");
             Log.d("Main Activity", "Fingerprint Service is not supported in the device.");
         }
     }
