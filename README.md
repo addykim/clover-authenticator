@@ -6,3 +6,5 @@ Background: Logging in on the web with email address, password, and a 2nd-factor
 Goal: Build a website/server ("ACME website") and an iOS/Android app (called "Authenticator") that works as follows: Browse to ACME website on your laptop. Simply browsing to that page launches the Authenticator app. Users use Touch ID/Imprint on the app. User is magically logged in on the ACME site.
 
 Recommendations: Use Bluetooth Low Energy advertisement from browser (there are Chrome extensions for this) to wake up and send a bit of data to the Authenticator iOS/Android app. Use websockets from web browser to web server to get instant notification of fingerprint authentication from Authenticator app.
+
+For Android Web socket: http://www.elabs.se/blog/66-using-websockets-in-native-ios-and-android-apps
