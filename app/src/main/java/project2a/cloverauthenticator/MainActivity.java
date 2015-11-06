@@ -70,13 +70,18 @@ public class MainActivity extends AppCompatActivity {
         }
         boolean isFeatureEnabled = mSpass.isFeatureEnabled(Spass.DEVICE_FINGERPRINT);
 
+
+        Log.d(TAG, "=============ATTEMPTING TO CONNECT TO WEBSOCKET");
+        connectWebSocket();
+
         if(isFeatureEnabled){
             mSpassFingerprint = new SpassFingerprint(mContext);
             mSpassFingerprint.setCanceledOnTouchOutside(true);
             mSpassFingerprint.startIdentifyWithDialog(mContext, listener, true);
         } else {
-            statusText.setText(":( This phone doesn't support fingerprinting");
-            Log.d("Main Activity", "Fingerprint Service is not supported in the device.");
+            statusText.setText("This phone doesn't support fingerprinting");
+            mWebSocketClient.send("This phone does not support fingerprinting");
+            Log.i(TAG, "Fingerprint Service is not supported in the device.");
         }
     }
 
@@ -107,19 +112,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinished(int eventStatus) {
                 // It is called when fingerprint identification is finished.
-                if (eventStatus == SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS) {
-                    // Identify operation succeeded with fingerprint
+                if (eventStatus == SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS ||
+                        eventStatus == SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS) {
+                    // Identify operation succeeded with fingerprint or alternative password
                     statusText.setText("Success");
-                } else if (eventStatus == SpassFingerprint.
-                        STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS) {
-                    // Identify operation succeeded with alternative password
-                    statusText.setText("Success");
-                } else if (eventStatus == SpassFingerprint.STATUS_USER_CANCELLED_BY_TOUCH_OUTSIDE) {
-                    statusText.setText("Touched outside");
-                } else if (eventStatus == SpassFingerprint.STATUS_USER_CANCELLED) {
-                    statusText.setText("User canceled");
+                    mWebSocketClient.send("Success");
                 } else {
                     statusText.setText("FAILED");
+                    mWebSocketClient.send("Error");
                     // Identify operation failed with given eventStatus.
                     // STATUS_TIMEOUT_FAILED
                     // STATUS_AUTHENTIFICATION_FAILED
@@ -131,15 +131,14 @@ public class MainActivity extends AppCompatActivity {
             public void onReady() {
                 // It is called when fingerprint identification is ready after
                 // startIdentify() is called.
-                Log.d("MAIN", "ON READY");
+                Log.d(TAG, "ON READY");
             }
 
             @Override
             public void onStarted() {
                 // It is called when the user touches the fingerprint sensor after
                 // startIdentify() is called.
-                Log.d("MAIN", "ON STARTED");
-
+                Log.d(TAG, "ON STARTED");
             }
         };
 
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     private void connectWebSocket() {
         URI uri;
         try {
-            uri = new URI("ws://websockethost:8080");
+            uri = new URI("ws://10.0.0.210:8080");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
