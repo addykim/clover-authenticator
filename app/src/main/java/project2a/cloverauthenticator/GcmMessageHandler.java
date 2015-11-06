@@ -5,6 +5,7 @@ package project2a.cloverauthenticator;
  */
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,8 +36,8 @@ public class GcmMessageHandler extends IntentService {
         String messageType = gcm.getMessageType(intent);
 
         mes = extras.getString("title");
-        showToast();
-        Log.i("GCM", "Received : (" +messageType+")  "+extras.getString("title"));
+        launchActivity(getApplicationContext());
+        Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("title"));
 
 
 
@@ -51,5 +52,11 @@ public class GcmMessageHandler extends IntentService {
             }
         });
 
+    }
+
+    public void launchActivity(Context context) {
+        Intent i = new Intent(context, MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 }

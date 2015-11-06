@@ -74,9 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(isFeatureEnabled){
             mSpassFingerprint = new SpassFingerprint(mContext);
-//            mSpassFingerprint.setCanceledOnTouchOutside(true);
+            mSpassFingerprint.setCanceledOnTouchOutside(true);
             mSpassFingerprint.startIdentifyWithDialog(mContext, listener, true);
-//            boolean mHasRegisteredFinger = mSpassFingerprint.hasRegisteredFinger();
         } else {
             displayText.setText(":(");
             Log.d("Main Activity", "Fingerprint Service is not supported in the device.");
