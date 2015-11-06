@@ -1,7 +1,6 @@
 package project2a.cloverauthenticator;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -22,7 +18,6 @@ import com.samsung.android.sdk.pass.SpassFingerprint;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -38,12 +33,11 @@ public class MainActivity extends AppCompatActivity {
 
     private SpassFingerprint mSpassFingerprint;
     private Context mContext;
-    private TextView displayText;
     private WebSocketClient mWebSocketClient;
 
-    GoogleCloudMessaging gcm;
+    protected TextView statusText;
 
-
+//    GoogleCloudMessaging gcm;
 //    String regid;
 //    Button btRegId;
 
@@ -55,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        displayText = (TextView) findViewById(R.id.display_text);
+        statusText = (TextView) findViewById(R.id.display_text);
+        statusText.setText("Authenticating...");
+
 //        btRegId = (Button) findViewById(R.id.btnGetRegId);
 //        btRegId.setOnClickListener(this);
 
@@ -64,11 +60,13 @@ public class MainActivity extends AppCompatActivity {
         try {
             mSpass.initialize(mContext);
         } catch (SsdkUnsupportedException e) {
-            Log.d("MAIN", "Exception: " + e.getMessage());
+            Log.d(TAG, "SSDK Unsupported Ex: " + e.getMessage());
             // Error handling
         } catch (UnsupportedOperationException e){
-            Log.d("MAIN", "Exception: " + e.getMessage());
+            Log.d(TAG, "Unsupported Operation: " + e.getMessage());
             // Error handling
+        } catch (Exception e) {
+            Log.d(TAG, "Exception: " + e);
         }
         boolean isFeatureEnabled = mSpass.isFeatureEnabled(Spass.DEVICE_FINGERPRINT);
 
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             mSpassFingerprint.setCanceledOnTouchOutside(true);
             mSpassFingerprint.startIdentifyWithDialog(mContext, listener, true);
         } else {
-            displayText.setText(":(");
+            statusText.setText(":( This phone doesn't support fingerprinting");
             Log.d("Main Activity", "Fingerprint Service is not supported in the device.");
         }
     }
@@ -111,17 +109,17 @@ public class MainActivity extends AppCompatActivity {
                 // It is called when fingerprint identification is finished.
                 if (eventStatus == SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS) {
                     // Identify operation succeeded with fingerprint
-                    displayText.setText("Success");
+                    statusText.setText("Success");
                 } else if (eventStatus == SpassFingerprint.
                         STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS) {
                     // Identify operation succeeded with alternative password
-                    displayText.setText("Success");
+                    statusText.setText("Success");
                 } else if (eventStatus == SpassFingerprint.STATUS_USER_CANCELLED_BY_TOUCH_OUTSIDE) {
-                    displayText.setText("Touched outside");
+                    statusText.setText("Touched outside");
                 } else if (eventStatus == SpassFingerprint.STATUS_USER_CANCELLED) {
-                    displayText.setText("User canceled");
+                    statusText.setText("User canceled");
                 } else {
-                    displayText.setText("FAILED");
+                    statusText.setText("FAILED");
                     // Identify operation failed with given eventStatus.
                     // STATUS_TIMEOUT_FAILED
                     // STATUS_AUTHENTIFICATION_FAILED
@@ -169,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        displayText.setText(displayText.getText() + "\n" + message);
+                        statusText.setText(statusText.getText() + "\n" + message);
                     }
                 });
             }
@@ -211,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //            @Override
 //            protected void onPostExecute(String msg) {
-//                displayText.setText("regid: " + regid);
+//                statusText.setText("regid: " + regid);
 //
 //            }
 //        }.execute(null, null, null);
