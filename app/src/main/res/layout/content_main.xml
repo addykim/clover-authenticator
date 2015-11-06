@@ -9,6 +9,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
+
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/display_text"
@@ -24,4 +25,14 @@
         android:src="@drawable/clover"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+
+    <!--This is used for grabbing the registration id for a device-->
+    <!--<Button-->
+        <!--android:id="@+id/btnGetRegId"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:text="Get RegID"-->
+        <!--android:layout_below="@+id/imageView"-->
+        <!--android:layout_centerHorizontal="true" />-->
+
 </RelativeLayout>

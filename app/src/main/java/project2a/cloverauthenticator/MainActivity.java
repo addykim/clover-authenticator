@@ -1,6 +1,7 @@
 package project2a.cloverauthenticator;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.pass.Spass;
 import com.samsung.android.sdk.pass.SpassFingerprint;
@@ -17,18 +22,30 @@ import com.samsung.android.sdk.pass.SpassFingerprint;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 
 public class MainActivity extends AppCompatActivity {
+// Uncomment this if you want to get the regid for other devices
+//public class MainActivity extends AppCompatActivity implements OnClickListener {
 
-    private static final String TAG = "MAIN";
+    static final String TAG = "MAIN";
+    static final String EDGEREGID= "APA91bHqOHYn8Jjl2G2g2bpZFOfmkS_E334JyJ5W0-oHdDastaupYtdt0GYAbOQD5NvtPt04xTMHUB-R7P21BbsLeKcPqov6z9a7t8amxEggpFeHia7nrb0pEY9TTybu2KoBu0jSy1rI";
+    static String PROJECT_NUMBER = "501746165158";
+
 
     private SpassFingerprint mSpassFingerprint;
     private Context mContext;
     private TextView displayText;
     private WebSocketClient mWebSocketClient;
+
+    GoogleCloudMessaging gcm;
+
+
+//    String regid;
+//    Button btRegId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         displayText = (TextView) findViewById(R.id.display_text);
+//        btRegId = (Button) findViewById(R.id.btnGetRegId);
+//        btRegId.setOnClickListener(this);
 
         mContext = this;
         Spass mSpass = new Spass();
@@ -55,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(isFeatureEnabled){
             mSpassFingerprint = new SpassFingerprint(mContext);
-            mSpassFingerprint.setCanceledOnTouchOutside(true);
+//            mSpassFingerprint.setCanceledOnTouchOutside(true);
             mSpassFingerprint.startIdentifyWithDialog(mContext, listener, true);
 //            boolean mHasRegisteredFinger = mSpassFingerprint.hasRegisteredFinger();
         } else {
@@ -128,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
+
     private void connectWebSocket() {
         URI uri;
         try {
@@ -167,5 +187,41 @@ public class MainActivity extends AppCompatActivity {
         };
         mWebSocketClient.connect();
     }
+
+    /* This is used to get the registration id for other devices. For now we have hard coded the
+        registration id for the Edge demo device we are using.
+     */
+//    private void getRegId() {
+//        new AsyncTask<Void, Void, String>() {
+//            @Override
+//            protected String doInBackground(Void... params) {
+//                String msg = "";
+//                try {
+//                    if (gcm == null) {
+//                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+//                    }
+//                    regid = gcm.register(PROJECT_NUMBER);
+//                    msg = "======================Device registered, registrtaion ID=" + regid;
+//                    Log.i("GCM", msg);
+//
+//                } catch (IOException e) {
+//                    msg = "Error: " + e.getMessage();
+//                }
+//                return msg;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(String msg) {
+//                displayText.setText("regid: " + regid);
+//
+//            }
+//        }.execute(null, null, null);
+//    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        getRegId();
+//    }
+
 }
 
