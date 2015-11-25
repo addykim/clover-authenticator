@@ -28,13 +28,17 @@ Use Bluetooth Low Energy advertisement from browser (there are Chrome extensions
 The code for the backend can be found [here](https://github.com/SterlinggTH/CloverWebServer).
 
 ### Photo Demo
+
 <img src="https://raw.githubusercontent.com/addykim/clover-authenticator/master/img/server-require-authenticate.png" height="326" width="600">
+
 Authenticating
 At this point a push notification is sent through Google Cloud Messaging and opens the app without the user having to manually do so.
 <img src="https://raw.githubusercontent.com/addykim/clover-authenticator/master/img/server-authenticating.png" height="326" width="600"><img src="https://github.com/addykim/clover-authenticator/raw/master/img/android-authenticating.png" height="500" width="300">
+
 Success
 This occurs if the fingerprint ID matches what is already stored on the phone.
-<img src="https://github.com/addykim/clover-authenticator/raw/master/img/android-success.png" height="326" width="600"><img src="https://github.com/addykim/clover-authenticator/raw/master/img/android-success.png" height="500" width="300">
+<img src="https://raw.githubusercontent.com/addykim/clover-authenticator/master/img/server-success.png" height="326" width="600"><img src="https://github.com/addykim/clover-authenticator/raw/master/img/android-success.png" height="500" width="300">
+
 Failure
 This occurs if the user cancels the fingerprinting process or does not have the appropriate fingerprint.
 <img src="https://raw.githubusercontent.com/addykim/clover-authenticator/master/img/server-fail.png" height="326" width="600"><img src="https://github.com/addykim/clover-authenticator/raw/master/img/android-failed.png" height="500" width="300">
