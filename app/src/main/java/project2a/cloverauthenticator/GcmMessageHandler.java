@@ -39,8 +39,6 @@ public class GcmMessageHandler extends IntentService {
         launchActivity(getApplicationContext());
         Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("title"));
 
-
-
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 
     }
